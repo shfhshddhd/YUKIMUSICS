@@ -1,0 +1,87 @@
+name: YUKI Music Bot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 */5 * * *"
+
+concurrency:
+  group: yuki-music-bot
+  cancel-in-progress: true
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    env:
+      API_ID: ${{ secrets.API_ID }}
+      API_HASH: ${{ secrets.API_HASH }}
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
+      OWNER_ID: ${{ secrets.OWNER_ID }}
+      LOGGER_ID: ${{ secrets.LOGGER_ID }}
+      STRING_SESSION: ${{ secrets.STRING_SESSION }}
+      STRING_SESSION2: ${{ secrets.STRING_SESSION2 }}
+      STRING_SESSION3: ${{ secrets.STRING_SESSION3 }}
+      STRING_SESSION4: ${{ secrets.STRING_SESSION4 }}
+      STRING_SESSION5: ${{ secrets.STRING_SESSION5 }}
+      STRING_SESSION6: ${{ secrets.STRING_SESSION6 }}
+      STRING_SESSION7: ${{ secrets.STRING_SESSION7 }}
+
+      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+      BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
+      BOT_NAME: ${{ secrets.BOT_NAME }}
+      ASSUSERNAME: ${{ secrets.ASSUSERNAME }}
+      BOT_FANCY_NAME: ${{ secrets.BOT_FANCY_NAME }}
+      WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
+      SUPPORT_CHANNEL: ${{ secrets.SUPPORT_CHANNEL }}
+      SUPPORT_CHAT: ${{ secrets.SUPPORT_CHAT }}
+
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+      START_REACTION: ${{ secrets.START_REACTION }}
+      START_STICKER: ${{ secrets.START_STICKER }}
+      START_IMG_URL: ${{ secrets.START_IMG_URL }}
+      PING_IMG_URL: ${{ secrets.PING_IMG_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start YUKI Music Bot
+        run: |
+          while true; do
+            echo "Starting YUKI Music Bot..."
+            python -m YUKIIMUSIC
+            EXIT_CODE=$?
+            echo "Bot stopped with exit code: $EXIT_CODE"
+            echo "Restarting in 10 seconds..."
+            sleep 10
+          done
