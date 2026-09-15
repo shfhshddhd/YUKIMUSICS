@@ -83,8 +83,6 @@ jobs:
           npx tsc
           nohup node build/main.js > /tmp/bgutil.log 2>&1 &
           sleep 5
-          curl -fsS http://127.0.0.1:4416/ || true
-
       - name: Start YUKI Music Bot
         run: |
           while true; do
