@@ -75,6 +75,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Setup YouTube PO Token Provider
+        run: |
+          git clone --depth 1 --branch 2.0.0 https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git /tmp/bgutil
+          cd /tmp/bgutil/server
+          npm ci
+          npx tsc
+          nohup node build/main.js > /tmp/bgutil.log 2>&1 &
+          sleep 5
+          curl -fsS http://127.0.0.1:4416/ || true
+
       - name: Start YUKI Music Bot
         run: |
           while true; do
