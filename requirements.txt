@@ -69,3 +69,5 @@ youtube-search
 youtube-search-python
 git+https://github.com/KurimuzonAkuma/pyrogram
 git+https://github.com/yt-dlp/yt-dlp
+yt-dlp-ejs
+bgutil-ytdlp-pot-provider==2.0.0
